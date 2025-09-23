@@ -29,8 +29,9 @@
                     for (var y = -5; y < 6; y++) {
                         for (var x = -5; x < 6; x++) {
                             new_sphere = new X.sphere();
+                            // random sizes
+                            new_sphere.radius = Math.random() * SIZE; 
 
-                            new.sphere.radius = Math.random() * 10;
                             new_sphere.transform.translateX((SIZE + GAP) * x);
                             new_sphere.transform.translateY((SIZE + GAP) * y);
                             new_sphere.transform.translateZ((SIZE + GAP) * z);
