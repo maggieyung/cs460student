@@ -22,7 +22,6 @@
                 r.init();
 
 
-
                 for (var z = -5; z < 6; z++) {
                     for (var y = -5; y < 6; y++) {
                         for (var x = -5; x < 6; x++) {
@@ -57,7 +56,7 @@
                             SELECTED_CUBE.visible = false;
                         }
                         if (e.key == 'w') { // change cube color 'w'
-                            SELECTED_CUBE.color = [Math.random(), Math.random(), Math.random()];
+                            SELECTED_CUBE.color = [Math.random(), Math.random(), Math.random()]
                         }
                         if (e.key == 'e') { // rotate cube 10 degrees in X-direction 'e'
                             SELECTED_CUBE.transform.rotateX(10);
