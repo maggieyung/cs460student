@@ -8,11 +8,11 @@
         </style>
 
         <script type="text/javascript" src="https://get.goXTK.com/xtk_edge.js"></script>
-        <script type="text/javascript" src="loader.js"></script>
+        <script type='text/javascript' src='loader.js'></script>
         <script>
             window.onload = function() {
 
-                var SELECTED_CUBE;
+                var SELECTED_CUBE; 
                 var SIZE = 10;
                 var GAP = 5;
 
@@ -48,13 +48,17 @@
                 window.onkeypress = function(e) {
                     
                     if (e.key === 'q') { // hide cube 'q'
-                        SELECTED_CUBE.visible = false;
+                        if (SELECTED_CUBE) SELECTED_CUBE.visible = false;
                     } else if (e.key === 'w') { // change cube color 'w'
-                        SELECTED_CUBE.color = [Math.random(), Math.random(), Math.random()];
+                        if (SELECTED_CUBE) SELECTED_CUBE.color = [Math.random(), Math.random(), Math.random()];
                     } else if (e.key === 'e') { // rotate cube 10 degrees in X-direction 'e'
-                        SELECTED_CUBE.transform.rotateX(10);
+                        if (SELECTED_CUBE) SELECTED_CUBE.transform.rotateX(10);
                     } else if (e.key === 'b') { // scene rotation 'b'
                         rotateScene = !rotateScene;
+                    } else if (e.key === 'o') { // download scene 'o'
+                        download();
+                    } else if (e.key === 'l') { // load scene 'l'
+                        upload('scene.json');
                     }
                 };
 
@@ -65,16 +69,6 @@
                     }
                 };
 
-
-                // loader.js
-
-                if (e.key == 'o') { // download scene 'o'
-                    download(r, 'scene.json');
-                } else
-                
-                if (e.key == 'l') { // load scene 'l'
-                    upload('scene.json');
-                }
                 r.render();
 
             }
