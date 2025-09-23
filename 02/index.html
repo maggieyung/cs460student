@@ -1,6 +1,3 @@
-
-
-<!DOCTYPE html>
 <html>
     <head>
         <title>CS460 Assignment 2</title>
@@ -18,7 +15,7 @@
                 r = new X.renderer3D();
                 r.init();
 
-                var SIZE = 5;
+                var SIZE = 10;
                 var GAP = 1;
 
 
@@ -34,9 +31,9 @@
                         }
                     }
                 }
+                r.render();
 
                 r.camera.position = [0, 0, 300];
-                r.render();
 
                 SELECTED_CUBE = null;
                 cubeid = 0;
