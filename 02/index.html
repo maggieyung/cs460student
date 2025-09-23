@@ -43,7 +43,7 @@
 
                 r.interactor.onMouseMove = function(event) {
                     cubeid = r.pick(event.offsetX, event.offsetY);
-                    if (cubeid != 0) {
+                    if (cubeid !== 0) {
                         SELECTED_CUBE = r.get(cubeid);
                     }
                 };
@@ -52,16 +52,16 @@
 
                 window.onkeypress = function(e) {
                     
-                    if (e.key == 'q') { // hide cube 'q'
+                    if (e.key === 'q') { // hide cube 'q'
                         SELECTED_CUBE.visible = false;
                     }
-                    if (e.key == 'w') { // change cube color 'w'
+                    if (e.key === 'w') { // change cube color 'w'
                         SELECTED_CUBE.color = [Math.random(), Math.random(), Math.random()];
                     }
-                    if (e.key == 'e') { // rotate cube 10 degrees in X-direction 'e'
+                    if (e.key === 'e') { // rotate cube 10 degrees in X-direction 'e'
                         SELECTED_CUBE.transform.rotateX(10);
                     }
-                    if (e.key == 'b') { // scene rotation 'b'
+                    if (e.key === 'b') { // scene rotation 'b'
                         rotateScene = !rotateScene;
                     }
 
@@ -72,10 +72,10 @@
                         }
                     };
 
-                    if (e.key == 'o') { // download scene 'o'
+                    if (e.key === 'o') { // download scene 'o'
                         download();
                     }
-                    if (e.key == 'l') { // load scene 'l'
+                    if (e.key === 'l') { // load scene 'l'
                         upload('scene.json');
                     }
 
