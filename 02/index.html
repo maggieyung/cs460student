@@ -52,15 +52,16 @@
                 var rotateScene = false;
 
                 window.onkeypress = function(e) {
-                    
-                    if (e.key == 'q') { // hide cube 'q'
-                        SELECTED_CUBE.visible = false;
-                    }
-                    if (e.key == 'w') { // change cube color 'w'
-                        SELECTED_CUBE.color = [Math.random(), Math.random(), Math.random()]
-                    }
-                    if (e.key == 'e') { // rotate cube 10 degrees in X-direction 'e'
-                        SELECTED_CUBE.transform.rotateX(10);
+                    if (SELECTED_CUBE) {
+                        if (e.key == 'q') { // hide cube 'q'
+                            SELECTED_CUBE.visible = false;
+                        }
+                        if (e.key == 'w') { // change cube color 'w'
+                            SELECTED_CUBE.color = [Math.random(), Math.random(), Math.random()]
+                        }
+                        if (e.key == 'e') { // rotate cube 10 degrees in X-direction 'e'
+                            SELECTED_CUBE.transform.rotateX(10);
+                        }
                     }
                     if (e.key == 'b') { // scene rotation 'b'
                         rotateScene = !rotateScene;
