@@ -15,8 +15,8 @@
             window.onload = function() {
 
                 var SELECTED_sphere; 
-                const SIZE = 10;
-                const GAP = 5;
+                var SIZE = 10;
+                var GAP = 5;
 
                 var CAMERAS = [];
                 var cycling = false;
@@ -30,6 +30,7 @@
                         for (var x = -5; x < 6; x++) {
                             new_sphere = new X.sphere();
 
+                            new.sphere.radius = Math.random() * 10;
                             new_sphere.transform.translateX((SIZE + GAP) * x);
                             new_sphere.transform.translateY((SIZE + GAP) * y);
                             new_sphere.transform.translateZ((SIZE + GAP) * z);
