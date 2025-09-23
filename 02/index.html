@@ -16,7 +16,7 @@
 
                 var SELECTED_CUBE; 
                 const SIZE = 5;
-                const GAP = 20;
+                const GAP = 15;
 
                 r = new X.renderer3D();
                 r.init();
@@ -66,13 +66,6 @@
                         rotateScene = !rotateScene;
                     }
 
-                    r.onRender = function() {
-                        if (rotateScene) {
-                        // spin the camera in X direction by 1 degree
-                            r.camera.rotate([1, 0]);
-                        }
-                    };
-
                     if (e.key == 'o') { // download scene 'o'
                         download();
                     }
@@ -80,7 +73,12 @@
                         upload('scene.json');
                     }
 
-
+                    r.onRender = function() {
+                        if (rotateScene) {
+                        // spin the camera in X direction by 1 degree
+                            r.camera.rotate([1, 0]);
+                        }
+                    };
                 };
 
             }
