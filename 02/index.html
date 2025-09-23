@@ -8,20 +8,19 @@
         </style>
 
         <script type="text/javascript" src="https://get.goXTK.com/xtk_edge.js"></script>
-        <script type='text/javascript' src='loader.js'></script>
+        <script type="text/javascript" src="loader.js"></script>
 
         <script>
 
             window.onload = function() {
 
                 var SELECTED_CUBE; 
-                var SIZE = 12;
-                var GAP = 4;
+                const SIZE = 12;
+                const GAP = 4;
 
                 r = new X.renderer3D();
                 r.init();
 
-                r.camera.position = [0, 0, 300];
 
 
                 for (var z = -5; z < 6; z++) {
@@ -39,10 +38,12 @@
                     }
                 }
 
-
+                r.camera.position = [0, 0, 300];
+                r.render();
 
                 r.interactor.onMouseMove = function(event) {
                     cubeid = r.pick(event.offsetX, event.offsetY);
+
                     if (cubeid !== 0) {
                         SELECTED_CUBE = r.get(cubeid);
                     }
@@ -52,17 +53,24 @@
 
                 window.onkeypress = function(e) {
                     
-                    if (e.key === 'q') { // hide cube 'q'
+                    if (e.key == 'q') { // hide cube 'q'
                         SELECTED_CUBE.visible = false;
                     }
-                    if (e.key === 'w') { // change cube color 'w'
-                        SELECTED_CUBE.color = [Math.random(), Math.random(), Math.random()];
+                    if (e.key == 'w') { // change cube color 'w'
+                        SELECTED_CUBE.color = [Math.random(), Math.random(), Math.random()]
                     }
-                    if (e.key === 'e') { // rotate cube 10 degrees in X-direction 'e'
+                    if (e.key == 'e') { // rotate cube 10 degrees in X-direction 'e'
                         SELECTED_CUBE.transform.rotateX(10);
                     }
-                    if (e.key === 'b') { // scene rotation 'b'
+                    if (e.key == 'b') { // scene rotation 'b'
                         rotateScene = !rotateScene;
+                    }
+
+                    if (e.key == 'o') { // download scene 'o'
+                        download();
+                    }
+                    if (e.key == 'l') { // load scene 'l'
+                        upload('scene.json');
                     }
 
                     r.onRender = function() {
@@ -71,15 +79,6 @@
                             r.camera.rotate([1, 0]);
                         }
                     };
-
-                    if (e.key === 'o') { // download scene 'o'
-                        download();
-                    }
-                    if (e.key === 'l') { // load scene 'l'
-                        upload('scene.json');
-                    }
-
-                    r.render();
                 };
 
             }
