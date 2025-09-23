@@ -29,6 +29,7 @@
                         new_cube.transform.translateY((SIZE + GAP) * y);
                         new_cube.transform.translateZ((SIZE + GAP) * z);
                         r.add(new_cube);
+                        
                     }
                 }
             }
@@ -37,6 +38,7 @@
             r.render();
 
             SELECTED_CUBE = null;
+            cubeid = 0;
 
             r.interactor.onMouseMove = function(event) {
                 cubeid = r.pick(event.offsetX, event.offsetY);
@@ -45,43 +47,31 @@
                 }
             };
 
-            // catches Q and hides cube
-            window.onkeypress = function(e) {
-                if (e.key === 'q') {
-                    SELECTED_CUBE.visible = false;
-                }
-            };
+            rotateScene = false;
 
-            // change selected cube color
             window.onkeypress = function(e) {
-                if (e.key === 'w') {
+                if (SELECTED_CUBE === null) return;
+                
+                if (e.key === 'q') { // hide cube 'q'
+                    SELECTED_CUBE.visible = false;
+                } else if (e.key === 'w') { // change cube color 'w'
                     SELECTED_CUBE.color = [Math.random(), Math.random(), Math.random()];
                     r.render();
-                }
-            };
-
-            // rotate cube 10 degrees in X-direction
-            window.onkeypress = function(e) {
-                if (e.key === 'e') {
-                    SELECTED.CUBE.transform.rotateX(10)
-                }
-            }
-
-            // boolean switch that toggles when B is pressed
-            rotateScene = false;
-            window.onkeypress = function(e) {
-                if (e.key === 'b') {
+                } else if (e.key === 'e') { // rotate cube 10 degrees in X-direction 'e'
+                    SELECTED_CUBE.transform.rotateX(10);
+                } else if (e.key === 'b') { // scene rotation 'b'
                     rotateScene = !rotateScene;
                 }
-
             };
-            if (rotateScene) {
-                r.onRender = function() {
+
+            r.onRender = function() {
+                if (rotateScene) {
                     // spin the camera in X direction by 1 degree
                     r.camera.rotate([1, 0]);
                 }
-            }
+            };
 
+            
             // loader.js
             
 
