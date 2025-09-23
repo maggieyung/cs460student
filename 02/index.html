@@ -37,8 +37,6 @@
                     }
                 }
 
-                r.camera.position = [0, 0, 300];
-                r.render();
 
                 r.interactor.onMouseMove = function(event) {
                     cubeid = r.pick(event.offsetX, event.offsetY);
@@ -80,6 +78,9 @@
                         }
                     };
                 };
+                
+                r.camera.position = [0, 0, 300];
+                r.render();
 
             }
 
