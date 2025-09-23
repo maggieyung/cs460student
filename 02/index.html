@@ -15,8 +15,8 @@
             window.onload = function() {
 
                 var SELECTED_CUBE; 
-                const SIZE = 12;
-                const GAP = 4;
+                var SIZE = 12;
+                var GAP = 4;
 
                 r = new X.renderer3D();
                 r.init();
@@ -57,7 +57,7 @@
                             SELECTED_CUBE.visible = false;
                         }
                         if (e.key == 'w') { // change cube color 'w'
-                            SELECTED_CUBE.color = [Math.random(), Math.random(), Math.random()]
+                            SELECTED_CUBE.color = [Math.random(), Math.random(), Math.random()];
                         }
                         if (e.key == 'e') { // rotate cube 10 degrees in X-direction 'e'
                             SELECTED_CUBE.transform.rotateX(10);
