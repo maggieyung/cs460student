@@ -8,13 +8,14 @@
         </style>
 
         <script type="text/javascript" src="https://get.goXTK.com/xtk_edge.js"></script>
-
+        <script type="text/javascript" src="loader.js"></script>
         <script>
             window.onload = function() {
 
                 r = new X.renderer3D();
                 r.init();
 
+                var SELECTED_CUBE
                 var SIZE = 10;
                 var GAP = 1;
 
@@ -31,12 +32,9 @@
                         }
                     }
                 }
-                r.render();
 
                 r.camera.position = [0, 0, 300];
 
-                SELECTED_CUBE = null;
-                cubeid = 0;
 
                 r.interactor.onMouseMove = function(event) {
                     cubeid = r.pick(event.offsetX, event.offsetY);
@@ -48,13 +46,11 @@
                 rotateScene = false;
 
                 window.onkeypress = function(e) {
-                    if (SELECTED_CUBE === null) return;
                     
                     if (e.key === 'q') { // hide cube 'q'
                         SELECTED_CUBE.visible = false;
                     } else if (e.key === 'w') { // change cube color 'w'
                         SELECTED_CUBE.color = [Math.random(), Math.random(), Math.random()];
-                        r.render();
                     } else if (e.key === 'e') { // rotate cube 10 degrees in X-direction 'e'
                         SELECTED_CUBE.transform.rotateX(10);
                     } else if (e.key === 'b') { // scene rotation 'b'
@@ -71,6 +67,16 @@
 
 
                 // loader.js
+
+                if (e.key == 'o') { // download scene 'o'
+                    download(r, 'scene.json');
+                } else
+                
+                if (e.key == 'l') { // load scene 'l'
+                    upload('scene.json');
+                }
+                r.render();
+
             }
 
         </script>
