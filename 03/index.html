@@ -33,7 +33,8 @@
       var torus = null; // reference to the last placed torus
       var mouseDragged = false; // flag to track if mouse is being dragged
     
-
+      var flicker = false; // flag to track if flicker effect is on or off
+      var wireframe = false; // flag to track if wireframe effect is on or off
 
       window.onload = function() {
 
@@ -85,8 +86,12 @@
                 // turn off OrbitControls
                 controls.enabled = false;
                 var geometry = new THREE.TorusKnotGeometry( 10, 3, 100, 16 );
-                var material = new THREE.MeshStandardMaterial({ color: 0xFE019A }); // hot pink
+                var material = new THREE.MeshStandardMaterial({ color: 0xFF69B4 }); // hot pink
                 var torus = new THREE.Mesh( geometry, material );
+
+                // wireframe if enabled
+                torus.material.wireframe = wireframe;
+
                 torus.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
                 scene.add( torus );
                 toruses.push( torus );
@@ -96,18 +101,19 @@
                 
                 renderer.domElement.onmousemove = function( e ){
                     if (mouseDragged && torus) { // only scale last placed torus if mouse is being dragged
-                        
-                        if (e.movementY < 0) { // mouse is dragged up
-                            // scale torus up
-                            DELTA = 0.05;
-                        } else { // mouse is dragged down
-                            // scale torus down
-                            DELTA = -0.05;
-                        }
+    
+                        DELTA = e.movementY * 0.01; // scale factor based on vertical mouse movement
                         // scale torus 
                         torus.scale.set(torus.scale.x + DELTA,
                         torus.scale.y + DELTA,
                         torus.scale.z + DELTA);
+
+                        // change color if torus is scale crosses 0
+                        if (torus.scale.x < 0) {
+                            torus.material.color.set(0x7CFC00); // grass green
+                        } else { // change to hot pink if scaled back
+                            torus.material.color.set(0xFF69B4); // hot pink
+                        }
                     }
                 };
                 mouseDragged = true;
@@ -139,7 +145,6 @@
         scene.add( torusKnot );
 
 
-
         //
         // The invisible plane
         //
@@ -157,17 +162,42 @@
 
 
 
+        // flicker effect toggle with 'f' key
+        window.onkeypress = function(e) {
+            if (e.key === 'f') {
+                flicker = !flicker; // toggle flicker effect with 'f' key
+            }
+            if (e.key === 'w') {
+                wireframe = !wireframe; // toggle wireframe effect with 'w' key
+                for (var object of toruses) {
+                    object.material.wireframe = wireframe;
+                    object.material.needsUpdate = true;
+                }
+            }
+        };
+
+
         // interaction
         controls = new OrbitControls( camera, renderer.domElement );
 
         // call animation/rendering loop
         animate();
-        
-      };
+
+      }
 
       function animate() {
 
         requestAnimationFrame( animate );
+
+        // flicker effect
+        if (flicker) {
+            for (var object of toruses) {
+                object.material.transparent = true;
+                object.material.opacity = 0.1 + Math.random() * 0.9; // random opacity between 0.1 and 1
+                object.material.needsUpdate = true;
+            }
+            
+        }
 
         // and here..
         controls.update();
