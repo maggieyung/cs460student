@@ -28,6 +28,13 @@
 
       var renderer, controls, scene, camera;
 
+      var DELTA = null; // scaling factor for torus when mouse is dragged
+      var toruses = []; // array to hold all toruses in the scene
+      var torus = null; // reference to the last placed torus
+      var mouseDragged = false; // flag to track if mouse is being dragged
+    
+
+
       window.onload = function() {
 
         // Three.js code goes here
@@ -47,9 +54,9 @@
         document.body.appendChild( renderer.domElement );
 
 
+        // mouse down callback
+        renderer.domElement.onmousedown = function( e ){
 
-        renderer.domElement.onclick = function( e ){
-          
             console.log('Yay! We clicked!');
 
             var pixel_coords = new THREE.Vector2( e.clientX, e.clientY );
@@ -71,11 +78,49 @@
 
             console.log('Ray to Invisible Plane', intersects[0].point);
 
-            // update cube position
-            cube.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
+            // torusKnot.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z); // move torus to mouse position
 
-          };
+            // create new torus at mouse click if shift is pressed
+            if (e.shiftKey) {
+                // turn off OrbitControls
+                controls.enabled = false;
+                var geometry = new THREE.TorusKnotGeometry( 10, 3, 100, 16 );
+                var material = new THREE.MeshStandardMaterial({ color: 0xFE019A }); // hot pink
+                var torus = new THREE.Mesh( geometry, material );
+                torus.position.set(intersects[0].point.x, intersects[0].point.y, intersects[0].point.z);
+                scene.add( torus );
+                toruses.push( torus );
 
+                // scale last placed torus when mouse is dragged
+                mouseDragged = true;
+                
+                renderer.domElement.onmousemove = function( e ){
+                    if (mouseDragged && torus) { // only scale last placed torus if mouse is being dragged
+                        
+                        if (e.movementY < 0) { // mouse is dragged up
+                            // scale torus up
+                            DELTA = 0.05;
+                        } else { // mouse is dragged down
+                            // scale torus down
+                            DELTA = -0.05;
+                        }
+                        // scale torus 
+                        torus.scale.set(torus.scale.x + DELTA,
+                        torus.scale.y + DELTA,
+                        torus.scale.z + DELTA);
+                    }
+                };
+                mouseDragged = true;
+            }
+
+        }
+          // mouse up callback
+        renderer.domElement.onmouseup = function( e ){
+                // reactivate OrbitControls
+                controls.enabled = true;
+                mouseDragged = false;
+                torus = null; // reset last placed torus
+        };
 
         // setup lights
         var ambientLight = new THREE.AmbientLight();
@@ -85,13 +130,13 @@
         light.position.set( 10, 100, 10 );
         scene.add( light );
 
-        // configure cube
-        var geometry = new THREE.BoxGeometry( 20, 20, 20 );
-        var material = new THREE.MeshStandardMaterial({ color: 0xffffff, wireframe: true });
+        // configure torus
+        var geometry = new THREE.TorusKnotGeometry( 10, 3, 100, 16 );
+        var material = new THREE.MeshStandardMaterial({ color: 0x8FA37E});
 
-        var cube = new THREE.Mesh( geometry, material );
+        var torusKnot = new THREE.Mesh( geometry, material );
 
-        scene.add( cube );
+        scene.add( torusKnot );
 
 
 
