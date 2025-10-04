@@ -193,7 +193,7 @@
         if (flicker) {
             for (var object of toruses) {
                 object.material.transparent = true;
-                object.material.opacity = 0.1 + Math.random() * 0.9; // random opacity between 0.1 and 1
+                object.material.opacity = Math.random() * 1; // random opacity between 0 and 1
                 object.material.needsUpdate = true;
             }
             
