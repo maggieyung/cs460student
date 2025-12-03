@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #000;
+    }
+    canvas {
+      width: 100vw;
+      height: 100vh;
+      display: block;
+      touch-action: none;
+    }
+  </style>
+  <script src="https://cdn.babylonjs.com/babylon.js"></script>
+  <script src="https://cdn.babylonjs.com/loaders/babylon.glTF2FileLoader.min.js"></script>
+</head>
+<body>
+    
+  <div id="materialButtons" style="position:absolute;top:10px;left:10px;z-index:10;">
+    <button data-model="none">None</button>
+    <button data-model="metallic">Metallic</button>
+    <button data-model="sheen">Sheen</button>
+    <button data-model="iridescent">Iridescent</button>
+    <button data-model="clearcoat">Clear coat</button>
+    <button data-model="transmission">Transmission</button>
+  </div>
+
+  <canvas id="renderCanvas"></canvas>
+  <script type="module">
+
+    const canvas = document.getElementById('renderCanvas');
+    let engine = new BABYLON.WebGPUEngine(canvas, { antialiasing: true });
+    await engine.initAsync();
+    const scene = new BABYLON.Scene(engine);
+    // prefiltered environment map 
+    scene.environmentTexture = BABYLON.CubeTexture.CreateFromPrefilteredData("https://playground.babylonjs.com/textures/environment.env", scene);
+
+    await BABYLON.SceneLoader.AppendAsync('', 'poly.glb', scene);
+
+    scene.createDefaultCameraOrLight(true, true, true);
+
+    // rotate camera 
+    if (scene.activeCamera) {
+      scene.activeCamera.alpha = (scene.activeCamera.alpha || 0) + Math.PI;
+    }
+
+    scene.activeCamera.attachControl(canvas, true);
+    engine.runRenderLoop(() => scene.render());
+    addEventListener('resize', () => engine.resize());
+
+    // store original materials for reset
+    const materials = new Map();
+    let customMaterials = {
+      metallic: null,
+      sheen: null,
+      iridescent: null,
+      clearcoat: null,
+      transmission: null
+    };
+
+    function materialModel(model) {
+      scene.meshes.forEach(mesh => {
+        if (mesh.material && mesh.material instanceof BABYLON.PBRMaterial) {
+          // store original material
+          if (!materials.has(mesh)) {
+            materials.set(mesh, mesh.material);
+          }
+          // original material
+          if (model === 'none') {
+            mesh.material = materials.get(mesh);
+            return;
+          }
+          // custom material
+          if (!customMaterials[model]) {
+            let mat = new BABYLON.PBRMaterial(model, scene);
+            switch(model) {
+              case 'metallic':
+                mat.albedoColor = new BABYLON.Color3(0.9, 0.9, 0.9);
+                mat.metallic = 1.0;
+                mat.roughness = 0.1;
+                mat.metallicF0Factor = 1.0;
+                break;
+              case 'sheen':
+                mat.albedoColor = new BABYLON.Color3(0.2, 0.2, 0.2);
+                mat.metallic = 0.0;
+                              
+                mat.roughness = 0.5;
+                mat.sheen.isEnabled = true;
+                mat.sheen.intensity = 1.0;
+                mat.sheen.color = new BABYLON.Color3(0.2, 0.2, 1.0);
+                break;
+              case 'iridescent':
+                mat.albedoColor = new BABYLON.Color3(0.2, 0.2, 0.2);
+                mat.metallic = 0.7;
+                mat.roughness = 0.15;
+                if (mat.iridescence) {
+                  mat.iridescence.isEnabled = true;
+                  mat.iridescence.intensity = 1.0;
+                }
+                break;
+              case 'clearcoat':
+                mat.albedoColor = new BABYLON.Color3(0.8, 0.8, 0.8);
+                mat.metallic = 0.5;
+                mat.roughness = 0.2;
+                mat.clearCoat.isEnabled = true;
+                mat.clearCoat.intensity = 1.0;
+                mat.clearCoat.roughness = 0.5;
+                break;
+            case 'transmission':
+                mat.albedoColor = new BABYLON.Color3(0.9, 0.9, 1.0);
+                mat.metallic = 0.0;
+                mat.roughness = 0.0;
+                mat.subSurface.isRefractionEnabled = true;
+                mat.subSurface.indexOfRefraction = 1.5;
+                mat.subSurface.transmissionIntensity = 1.0;
+                mat.alpha = 0.5;
+                break;
+            }
+            customMaterials[model] = mat;
+          }
+          mesh.material = customMaterials[model];
+        }
+      });
+    }
+
+    materialModel('none');
+
+    // button
+    document.getElementById('materialButtons').addEventListener('click', (e) => {
+      if (e.target.tagName === 'BUTTON') {
+        materialModel(e.target.getAttribute('data-model'));
+      }
+    });
+  </script>
+</body>
+</html>
